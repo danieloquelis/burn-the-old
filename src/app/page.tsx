@@ -118,6 +118,13 @@ export default function Home() {
         <div className="mt-2">Wishes: {wishes.length}</div>
       </div>
 
+      {/* 7) If not new year, show input and Simulate button */}
+      {!isNewYear && (
+        <div className="z-50 p-4 flex justify-center items-center space-x-2">
+          <UserInput onAddWish={addWish} />
+        </div>
+      )}
+
       {/* 5) Show a spinner (or any loader) while fetching data */}
       {isLoading && (
         <div className="flex justify-center items-center z-50 p-4">
@@ -155,13 +162,6 @@ export default function Home() {
           <OrbitControls />
         </Canvas>
       </div>
-
-      {/* 7) If not new year, show input and Simulate button */}
-      {!isNewYear && (
-        <div className="z-50 p-4 flex justify-center items-center space-x-2">
-          <UserInput onAddWish={addWish} />
-        </div>
-      )}
 
       {/* If isNewYear, play the burning sound */}
       {isNewYear && <BurningSound />}
