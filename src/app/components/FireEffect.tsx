@@ -3,22 +3,29 @@
 import { useRef, useLayoutEffect } from "react";
 import * as THREE from "three";
 import { extend, useFrame, useLoader } from "@react-three/fiber";
+import { MeshProps } from "react-three-fiber";
+
+interface FireEffectProps
+  extends Omit<MeshProps, "material" | "matrix" | "geometry"> {
+  color?: THREE.Color | number | string;
+  scale?: number;
+}
 
 class FireMaterial extends THREE.ShaderMaterial {
   constructor() {
     super({
       defines: { ITERATIONS: "10", OCTIVES: "3" },
       uniforms: {
-        fireTex: { type: "t", value: null },
-        color: { type: "c", value: null },
-        time: { type: "f", value: 0.0 },
-        seed: { type: "f", value: 0.0 },
-        invModelMatrix: { type: "m4", value: null },
-        scale: { type: "v3", value: null },
-        noiseScale: { type: "v4", value: new THREE.Vector4(1, 2, 1, 0.3) },
-        magnitude: { type: "f", value: 2.5 },
-        lacunarity: { type: "f", value: 3.0 },
-        gain: { type: "f", value: 0.6 },
+        fireTex: { value: null },
+        color: { value: null },
+        time: { value: 0.0 },
+        seed: { value: 0.0 },
+        invModelMatrix: { value: null },
+        scale: { value: null },
+        noiseScale: { value: new THREE.Vector4(1, 2, 1, 0.3) },
+        magnitude: { value: 2.5 },
+        lacunarity: { value: 3.0 },
+        gain: { value: 0.6 },
       },
       vertexShader: `
         varying vec3 vWorldPos;
@@ -163,8 +170,10 @@ class FireMaterial extends THREE.ShaderMaterial {
 
 extend({ FireMaterial });
 
-export function FireEffect({ color, scale = 1, ...props }) {
-  const ref = useRef();
+type FireMesh = THREE.Mesh<THREE.BoxGeometry, FireMaterial>;
+
+export function FireEffect({ color, scale = 1 }: FireEffectProps) {
+  const ref = useRef<FireMesh>(null!);
   const texture = useLoader(THREE.TextureLoader, "/assets/fire.png");
 
   useFrame((state) => {
@@ -185,12 +194,18 @@ export function FireEffect({ color, scale = 1, ...props }) {
     ref.current.material.uniforms.invModelMatrix.value = new THREE.Matrix4();
     ref.current.material.uniforms.scale.value = new THREE.Vector3(1, 1, 1);
     ref.current.material.uniforms.seed.value = Math.random() * 19.19;
-  }, [color]);
+  }, [color, texture]);
 
   return (
-    <mesh ref={ref} scale={scale} {...props}>
+    <mesh ref={ref} scale={scale} position={[0, 1, 0]}>
       <boxGeometry />
-      <fireMaterial transparent depthWrite={false} depthTest={false} />
+      <primitive
+        object={new FireMaterial()}
+        attach="material"
+        transparent
+        depthWrite={false}
+        depthTest={false}
+      />
     </mesh>
   );
 }

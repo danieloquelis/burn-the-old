@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, Vector3 } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import * as THREE from "three";
 
@@ -8,16 +8,16 @@ export function FallingWish({
   position,
 }: {
   wish: string;
-  position?: [number, number, number];
+  position?: Vector3;
 }) {
-  const group = useRef<THREE.Group>();
+  const group = useRef<THREE.Group>(null);
   const [hasLanded, setHasLanded] = useState(false);
   const [finalRotation] = useState(() => ({
     x: Math.random() * Math.PI,
     y: Math.random() * Math.PI,
     z: Math.random() * Math.PI,
   }));
-  const [startPosition] = useState(() => [
+  const [startPosition] = useState<Vector3>(() => [
     Math.random() * 4 - 2,
     5,
     Math.random() * 4 - 2,

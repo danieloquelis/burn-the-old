@@ -14,7 +14,7 @@ export function Muneco({ isNewYear }: { isNewYear: boolean }) {
       <primitive object={scene} />
       {isNewYear && (
         <FireEffect
-          position={[0, 1, 0]}
+          position={[0, -1, 0]}
           scale={4}
           color={new THREE.Color(0xff9500)}
         />
