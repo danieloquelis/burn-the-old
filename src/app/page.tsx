@@ -72,7 +72,7 @@ export default function Home() {
         </Canvas>
       </div>
       {!isNewYear && (
-        <div className="p-4 flex justify-center items-center space-x-2">
+        <div className="z-50 p-4 flex justify-center items-center space-x-2">
           <UserInput onAddWish={addWish} />
           <Button onClick={simulateNewYear} variant="secondary">
             Simulate New Year (Test)
