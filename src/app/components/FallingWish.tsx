@@ -66,7 +66,7 @@ export function FallingWish({
         anchorY="middle"
         maxWidth={0.8}
       >
-        {wish}
+        ****
       </Text>
     </group>
   );
