@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Text } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import { Muneco } from "./components/Muneco";
 import { UserInput } from "./components/UserInput";
 import { Countdown } from "./components/Countdown";
@@ -20,18 +20,17 @@ export default function Home() {
   useEffect(() => {
     const checkTime = () => {
       const now = new Date();
-      const isNewYearTime =
-        now.getMonth() === 11 &&
-        now.getDate() === 31 &&
-        now.getHours() === 23 &&
-        now.getMinutes() === 59 &&
-        now.getSeconds() === 59;
-      if (isNewYearTime) {
+      // Create a date object representing 2025-01-01 00:00:00 (local time)
+      const newYear2025 = new Date(2025, 0, 1, 0, 0, 0);
+
+      // If "now" is the same or after 00:00:00 on January 1, 2025
+      if (now >= newYear2025) {
         setIsNewYear(true);
       }
     };
 
-    const timer = setInterval(checkTime, 1000);
+    checkTime(); // Run once immediately in case it's already after 01-Jan-2025
+    const timer = setInterval(checkTime, 1000); // Check every second
     return () => clearInterval(timer);
   }, []);
 
