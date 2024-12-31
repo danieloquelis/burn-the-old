@@ -115,7 +115,9 @@ export default function Home() {
       <div className="p-4 flex flex-col items-center">
         <h1 className="text-2xl mb-2">Welcome 2025!</h1>
         <Countdown />
-        <div className="mt-2">Wishes: {wishes.length}</div>
+        <div className="mt-2">
+          Wishes from all over the world: {wishes.length}
+        </div>
       </div>
 
       {/* 7) If not new year, show input and Simulate button */}
