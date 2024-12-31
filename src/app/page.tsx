@@ -58,6 +58,14 @@ export default function Home() {
           <pointLight position={[10, 10, 10]} />
           <Muneco isNewYear={isNewYear} />
           <Floor />
+          {/* Render all wishes as fallen papers */}
+          {wishes.map((wish, index) => (
+            <FallingWish
+              key={index}
+              wish={wish}
+              position={[Math.random() * 4 - 2, 0.05, Math.random() * 4 - 2]}
+            />
+          ))}
           {isNewYear && <Fireworks />}
           {newWish && <FallingWish wish={newWish} />}
           <OrbitControls />

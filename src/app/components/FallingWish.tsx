@@ -3,36 +3,68 @@ import { useFrame } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import * as THREE from "three";
 
-export function FallingWish({ wish }: { wish: string }) {
+export function FallingWish({
+  wish,
+  position,
+}: {
+  wish: string;
+  position?: [number, number, number];
+}) {
   const group = useRef<THREE.Group>();
   const [hasLanded, setHasLanded] = useState(false);
+  const [finalRotation] = useState(() => ({
+    x: Math.random() * Math.PI,
+    y: Math.random() * Math.PI,
+    z: Math.random() * Math.PI,
+  }));
+  const [startPosition] = useState(() => [
+    Math.random() * 4 - 2,
+    5,
+    Math.random() * 4 - 2,
+  ]);
 
   useFrame((state, delta) => {
     if (group.current && !hasLanded) {
+      // Fall effect
       group.current.position.y -= delta * 2;
-      group.current.rotation.z = Math.sin(state.clock.elapsedTime * 2) * 0.1;
-      if (group.current.position.y <= 0.5) {
-        group.current.position.y = 0.5;
+      // Rotate while falling
+      group.current.rotation.x += delta * 2;
+      group.current.rotation.z += delta * (Math.random() - 0.5);
+
+      if (group.current.position.y <= 0.05) {
+        group.current.position.y = 0.05;
+        group.current.rotation.set(
+          finalRotation.x,
+          finalRotation.y,
+          finalRotation.z,
+        );
         setHasLanded(true);
       }
     }
   });
 
   return (
-    <group
-      ref={group}
-      position={[Math.random() * 2 - 1, 5, Math.random() * 2 - 1]}
-    >
-      <mesh>
-        <planeGeometry args={[0.5, 0.5]} />
-        <meshBasicMaterial color="yellow" />
-      </mesh>
+    <group ref={group} position={position || startPosition} scale={0.3}>
+      {/* Wrinkled paper effect using multiple planes with slight rotations */}
+      <group rotation={[0, 0, Math.PI / 6]}>
+        <mesh>
+          <planeGeometry args={[1, 1]} />
+          <meshStandardMaterial color="#ffd700" side={THREE.DoubleSide} />
+        </mesh>
+      </group>
+      <group rotation={[0.1, 0, -Math.PI / 8]} position={[0.1, 0.1, 0.01]}>
+        <mesh>
+          <planeGeometry args={[0.9, 0.9]} />
+          <meshStandardMaterial color="#ffeb3b" side={THREE.DoubleSide} />
+        </mesh>
+      </group>
       <Text
-        position={[0, 0, 0.01]}
-        fontSize={0.05}
+        position={[0, 0, 0.02]}
+        fontSize={0.15}
         color="black"
         anchorX="center"
         anchorY="middle"
+        maxWidth={0.8}
       >
         {wish}
       </Text>
