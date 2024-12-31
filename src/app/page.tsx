@@ -53,11 +53,10 @@ export default function Home() {
         <div className="mt-2">Wishes: {wishes.length}</div>
       </div>
       <div className="flex-grow relative">
-        <Canvas camera={{ position: [0, 3, 5] }}>
-          <ambientLight intensity={0.5} />
+        <Canvas camera={{ position: [-2, 3, 5], zoom: 3 }}>
+          <ambientLight intensity={1} />
           <pointLight position={[10, 10, 10]} />
           <Muneco isNewYear={isNewYear} />
-          <Wishes wishes={wishes} />
           <Floor />
           {isNewYear && <Fireworks />}
           {newWish && <FallingWish wish={newWish} />}
@@ -74,26 +73,5 @@ export default function Home() {
       )}
       {isNewYear && <BurningSound />}
     </div>
-  );
-}
-
-function Wishes({ wishes }: { wishes: string[] }) {
-  return (
-    <group>
-      {wishes.map((wish, index) => (
-        <Text
-          key={index}
-          position={[
-            Math.random() * 2 - 1,
-            2 + index * 0.3,
-            Math.random() * 2 - 1,
-          ]}
-          fontSize={0.2}
-          color="white"
-        >
-          {wish}
-        </Text>
-      ))}
-    </group>
   );
 }

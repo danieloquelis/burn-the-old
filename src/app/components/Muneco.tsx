@@ -1,47 +1,21 @@
 "use client";
-import { useRef, useEffect, useState } from "react";
-import { useFrame } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { FireEffect } from "./FireEffect";
 
+import { useLoader } from "@react-three/fiber";
+import { GLTFLoader } from "three-stdlib";
+
 export function Muneco({ isNewYear }: { isNewYear: boolean }) {
-  const group = useRef<THREE.Group>();
-  const { nodes, materials } = useGLTF("/assets/muneco.glb");
-  const [burnStartTime, setBurnStartTime] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (isNewYear && !burnStartTime) {
-      setBurnStartTime(Date.now());
-    }
-  }, [isNewYear, burnStartTime]);
-
-  useFrame((state, delta) => {
-    if (isNewYear && group.current && burnStartTime) {
-      const elapsedTime = (Date.now() - burnStartTime) / 1000; // seconds
-      const burnDuration = 60 * 60; // 1 hour in seconds
-      if (elapsedTime < burnDuration) {
-        const burnProgress = elapsedTime / burnDuration;
-        group.current.rotation.y += delta;
-        group.current.scale.setScalar(1 - burnProgress * 0.9); // Shrink to 10% of original size over 1 hour
-      }
-    }
-  });
+  const gltf = useLoader(GLTFLoader, "/assets/muneco.glb");
+  const { scene } = gltf;
 
   return (
-    <group ref={group} dispose={null} position={[0, 0.5, 0]}>
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.LOD3spShape.geometry}
-        material={materials.blinn3}
-        rotation={[Math.PI / 2, 0, 0]}
-        scale={0.01}
-      />
+    <group dispose={null} position={[0, 0.5, 0]}>
+      <primitive object={scene} />
       {isNewYear && (
         <FireEffect
-          position={[0, -0.5, 0]}
-          scale={1.5}
+          position={[0, 1, 0]}
+          scale={4}
           color={new THREE.Color(0xff9500)}
         />
       )}
