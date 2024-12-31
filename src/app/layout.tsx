@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   title: "Burn The Old",
   description:
     "Minimalistic latin american tradition for new year. Burn all what you don't want in your life anymore.",
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
